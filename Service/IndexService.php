@@ -400,7 +400,7 @@ class IndexService
         $bulkParams = [
             '_type' => $this->getTypeName(),
             '_id' => $data['_id'] ?? null,
-            'id' => $data['_routing'] ?? null,
+            'routing' => $data['_routing'] ?? null,
         ];
 
         unset($data['_index'], $data['_type'], $data['_id'], $data['_routing']);
