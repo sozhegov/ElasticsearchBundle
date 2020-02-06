@@ -12,7 +12,7 @@
 namespace ONGR\ElasticsearchBundle\Event;
 
 use Elasticsearch\ClientBuilder;
-use Symfony\Contracts\EventDispatcher\Event;
+use Symfony\Component\EventDispatcher\Event;
 
 class PostCreateClientEvent extends Event
 {
