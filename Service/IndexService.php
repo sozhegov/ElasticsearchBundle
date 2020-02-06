@@ -90,7 +90,6 @@ class IndexService
 //            $client->setLogger()
 
             $this->eventDispatcher->dispatch(
-                Events::POST_CLIENT_CREATE,
                 new PostCreateClientEvent($this->namespace, $client)
             );
             $this->client = $client->build();
@@ -406,7 +405,6 @@ class IndexService
         unset($data['_index'], $data['_type'], $data['_id'], $data['_routing']);
 
         $this->eventDispatcher->dispatch(
-            Events::BULK,
             new BulkEvent($operation, $bulkParams, $data)
         );
 
@@ -446,7 +444,6 @@ class IndexService
         $bulkResponse = [];
         if (!empty($this->bulkQueries)) {
             $this->eventDispatcher->dispatch(
-                Events::PRE_COMMIT,
                 new CommitEvent($commitMode, $this->bulkQueries, [])
             );
 
@@ -485,7 +482,6 @@ class IndexService
             }
 
             $this->eventDispatcher->dispatch(
-                Events::POST_COMMIT,
                 new CommitEvent($commitMode, $this->bulkQueries, $bulkResponse)
             );
 
