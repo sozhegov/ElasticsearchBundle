@@ -7,6 +7,7 @@ services:
 
     ONGR\ElasticsearchBundle\Command\:
         resource: '../../Command'
+        arguments: ["@service_container"]
         tags:
             - { name: console.command }
 
