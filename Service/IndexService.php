@@ -193,6 +193,7 @@ class IndexService
         }
 
         $result['_source']['_id'] = $result['_id'];
+        $result['_source']['_routing'] = $result['_routing'] ?? null;
 
         return $this->converter->convertArrayToDocument($this->namespace, $result['_source']);
     }
@@ -385,9 +386,10 @@ class IndexService
     {
         $bulkParams = [
             '_id' => $data['_id'] ?? null,
+            'routing' => $data['_routing'] ?? null,
         ];
 
-        unset($data['_index'], $data['_id']);
+        unset($data['_index'], $data['_id'], $data['_routing']);
 
         $this->eventDispatcher->dispatch(
             new BulkEvent($operation, $bulkParams, $data),
