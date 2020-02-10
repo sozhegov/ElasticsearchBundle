@@ -278,6 +278,13 @@ class IndexService
         );
     }
 
+    public function countDocuments(Search $search)
+    {
+        $results = $this->executeCount($search);
+
+        return $results['count'];
+    }
+
     public function findArray(Search $search): ArrayIterator
     {
         $results = $this->executeSearch($search);
@@ -305,6 +312,11 @@ class IndexService
     private function executeSearch(Search $search): array
     {
         return $this->search($search->toArray(), $search->getUriParams());
+    }
+
+    private function executeCount(Search $search): array
+    {
+        return $this->count($search->toArray(), $search->getUriParams());
     }
 
     public function getIndexDocumentCount(): int
@@ -371,6 +383,27 @@ class IndexService
 //        $this->stopwatch('start', 'search');
         $result = $this->getClient()->search($requestParams);
 //        $this->stopwatch('stop', 'search');
+
+        return $result;
+    }
+
+
+    public function count(array $query, array $params = []): array
+    {
+        $body = empty($query['query']) ? ['query' => []] : ['query' => $query['query']];
+        if (!empty($query['post_filter'])) {
+            $body['query'] = array_merge($body['query'], $query['post_filter']);
+        }
+        $requestParams = [
+            'index' => $this->getIndexName(),
+            'body'  => $body,
+        ];
+
+        if (!empty($params)) {
+            $requestParams = array_merge($requestParams, $params);
+        }
+
+        $result = $this->getClient()->count($requestParams);
 
         return $result;
     }
