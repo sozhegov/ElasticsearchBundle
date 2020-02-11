@@ -316,7 +316,37 @@ class IndexService
 
     private function executeCount(Search $search): array
     {
-        return $this->count($search->toArray(), $search->getUriParams());
+        $searchUriParams = $search->getUriParams();
+        $allowedUriParams = [
+            "allow_no_indices",
+            "analyze_wildcard",
+            "analyzer",
+            "default_operator",
+            "df",
+            "error_trace",
+            "expand_wildcards",
+            "filter_path",
+            "human",
+            "ignore_throttled",
+            "ignore_unavailable",
+            "lenient",
+            "min_score",
+            "opaqueId",
+            "preference",
+            "pretty",
+            "q",
+            "routing",
+            "source",
+            "terminate_after",
+        ];
+        $uriParams = [];
+        foreach ($allowedUriParams as $allowedUriParam) {
+            if (!empty($searchUriParams[$allowedUriParam])) {
+                $uriParams[$allowedUriParam] = $searchUriParams[$allowedUriParam];
+            }
+        }
+
+        return $this->count($search->toArray(), $uriParams);
     }
 
     public function getIndexDocumentCount(): int
