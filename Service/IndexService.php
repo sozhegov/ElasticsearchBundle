@@ -420,10 +420,23 @@ class IndexService
 
     public function count(array $query, array $params = []): array
     {
-        $body = empty($query['query']) ? ['query' => []] : ['query' => $query['query']];
-        if (!empty($query['post_filter'])) {
-            $body['query'] = array_merge($body['query'], $query['post_filter']);
+        if (!empty($query['query']) && $query['post_filter']) {
+            $body['query'] = [
+                'bool' => [
+                    'must' => [
+                        $query['query'],
+                        $query['post_filter'],
+                    ],
+                ],
+            ];
         }
+        else {
+            $body = empty($query['query']) ? ['query' => []] : ['query' => $query['query']];
+            if (!empty($query['post_filter'])) {
+                $body['query'] = array_merge($body['query'], $query['post_filter']);
+            }
+        }
+
         $requestParams = [
             'index' => $this->getIndexName(),
             'body'  => $body,
